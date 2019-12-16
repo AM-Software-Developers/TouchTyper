@@ -9,15 +9,11 @@
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
         <h6>wpm:{{wpm}}</h6>
-        <span>{{finished}}</span>
-        <span>{{currentfinished}}</span>
-        <span>{{currenterror}}</span>
-        <span class="blinking-cursor">|</span>
-        <span>{{currentfinishedafter}}</span>
-        <span>
-          <u>{{currentunfinished}}</u>
-        </span>
-        <span>{{unfinished}}</span>
+        <span class="finished">{{finished}}</span>
+        <span class="currentfinished"><u>{{currentfinished}}</u></span>
+        <span class="currenterror"><u>{{currenterror}}</u></span>
+        <span class="currentunfinished"><u>{{currentunfinished}}</u></span>
+        <span class="unfinished">{{unfinished}}</span>
         <br />
         <input type="text" id="tempword" v-model="tempword" :disabled="disableInput" />
         <p>{{tempword}}</p>
@@ -37,18 +33,59 @@ export default {
       command: 1,
       tempword: null,
       typingcontents: null,
-      finished: null,
+      finished: "",
       currentunfinished: null,
       currentfinished: null,
+      currentfinishedafter: null,
       currenterror: null,
-      currentfinishedafter:null,
+      currentword: null,
       unfinished: null,
       wpm: 0,
       disableInput: true
     };
   },
   watch: {
-    tempword() {}
+    tempword() {
+      var words = this.unfinished.split(' ');
+      var word = words[0];
+      var self = this;
+      // console.log(this.tempword);
+      if(this.tempword === "") {
+        this.currentunfinished = word+' ';
+        this.currentword = word+' ';
+        this.unfinished = this.unfinished.replace(word+' ',"");
+        return;
+      }
+      // console.log(this.currentword);
+      var chars = this.currentword.split('');
+      var curchars = this.tempword.split('');
+      var pos = 0;
+      this.currentfinished = "";
+      this.currenterror = "";
+      this.currentunfinished = "";
+      var flag = 0;
+      while (pos < curchars.length) {
+        if(curchars[pos] === chars[pos] &&flag == 0){
+          this.currentfinished += curchars[pos];
+        }
+        else {
+          this.currenterror += chars[pos];
+          flag = 1;
+        }
+        pos++;
+      }
+      while (pos < chars.length) {
+        this.currentunfinished += chars[pos++];
+      }
+      if(this.currentunfinished === "") {
+        this.tempword = "";
+        this.finished += this.currentfinished;
+        this.currentfinished = "";
+      }
+      if(this.unfinished === "" && this.currentunfinished === "") {
+        this.wpm = "You Win!";
+      }
+    }
   },
   methods: {
     Focus(location) {
@@ -56,9 +93,10 @@ export default {
     }
   },
   created() {
-    this.typingcontents = "something to type";
+    this.typingcontents = "something to type. ";
     this.unfinished = this.typingcontents;
     var self = this;
+    this.tempword = "";
     setInterval(function() {
       self.command++;
       if (self.command >= 3) {
@@ -112,5 +150,16 @@ export default {
 .background3 {
   color: black;
   background-color: #39ff14;
+}
+.finished {
+  color: #39ff14;
+}
+.currentfinished {
+  color: #39ff14;
+  
+}
+.currenterror {
+  color: red;
+  background-color: pink;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div >
     <div align="center">
-      <div class="centerbox">
+      <div class="centerbox typewriter">
         <h1>AM TouchTyper</h1>
         <router-link tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
       </div>

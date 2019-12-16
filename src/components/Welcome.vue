@@ -3,7 +3,7 @@
     <div align="center">
       <div class="centerbox typewriter">
         <h1>AM TouchTyper</h1>
-        <router-link v-shortkey.once="['ctrl', 'alt', 'o']" @shortkey.native="theAction()" tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
+        <router-link v-shortkey="['ctrl', 'alt', 'o']" @shortkey.native="theAction()" tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
       </div>
     </div>
   </div>

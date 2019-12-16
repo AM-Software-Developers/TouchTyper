@@ -5,19 +5,27 @@
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
       <h1 v-else-if="command===3" class="background3">GO!</h1>
     </div>
-    <button style='border-radius:100%' class="btn btn-primary" > <-</button>
+    <p>{{command}}</p>
+    <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
         <h6>wpm:{{wpm}}</h6>
         <span class="finished">{{finished}}</span>
-        <span class="currentfinished"><u>{{currentfinished}}</u></span>
-        <span class="currenterror"><u>{{currenterror}}</u></span>
-        <span class="currentunfinished"><u>{{currentunfinished}}</u></span>
+        <span class="currentfinished">
+          <u>{{currentfinished}}</u>
+        </span>
+        <span class="currenterror">
+          <u>{{currenterror}}</u>
+        </span>
+        <span class="currentunfinished">
+          <u>{{currentunfinished}}</u>
+        </span>
         <span class="unfinished">{{unfinished}}</span>
         <br />
         <input type="text" id="tempword" v-model="tempword" :disabled="disableInput" />
         <p>{{tempword}}</p>
       </div>
+      <div v-else class="centerbox">BETTER LUCK NEXT TIME</div>
     </div>
   </div>
 </template>
@@ -40,35 +48,36 @@ export default {
       currenterror: null,
       currentword: null,
       unfinished: null,
-      wpm: 0,
-      disableInput: true
+      disableInput: true,
+      wordstyped: 0,
+      timeelapsed: 0,
+      startTimer: 0
     };
   },
   watch: {
     tempword() {
-      var words = this.unfinished.split(' ');
+      var words = this.unfinished.split(" ");
       var word = words[0];
       var self = this;
       // console.log(this.tempword);
-      if(this.tempword === "") {
-        this.currentunfinished = word+' ';
-        this.currentword = word+' ';
-        this.unfinished = this.unfinished.replace(word+' ',"");
+      if (this.tempword === "") {
+        this.currentunfinished = word + " ";
+        this.currentword = word + " ";
+        this.unfinished = this.unfinished.replace(word + " ", "");
         return;
       }
       // console.log(this.currentword);
-      var chars = this.currentword.split('');
-      var curchars = this.tempword.split('');
+      var chars = this.currentword.split("");
+      var curchars = this.tempword.split("");
       var pos = 0;
       this.currentfinished = "";
       this.currenterror = "";
       this.currentunfinished = "";
       var flag = 0;
       while (pos < curchars.length) {
-        if(curchars[pos] === chars[pos] &&flag == 0){
+        if (curchars[pos] === chars[pos] && flag == 0) {
           this.currentfinished += curchars[pos];
-        }
-        else {
+        } else {
           this.currenterror += chars[pos];
           flag = 1;
         }
@@ -77,13 +86,15 @@ export default {
       while (pos < chars.length) {
         this.currentunfinished += chars[pos++];
       }
-      if(this.currentunfinished === "") {
+      if (this.currentunfinished === "") {
         this.tempword = "";
         this.finished += this.currentfinished;
+        this.wordstyped += 1;
         this.currentfinished = "";
       }
-      if(this.unfinished === "" && this.currentunfinished === "") {
+      if (this.unfinished === "" && this.currentunfinished === "") {
         this.wpm = "You Win!";
+        clearInterval(this.startTimer);
       }
     }
   },
@@ -97,15 +108,31 @@ export default {
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
-    setInterval(function() {
+    this.startTimer = setInterval(function() {
       self.command++;
       if (self.command >= 3) {
         self.disableInput = false;
         self.Focus("tempword");
-        clearInterval();
+        self.timeelapsed+=1;
+        if(self.timeelapsed>10){
+          //gameover
+          self.timeelapsed=0;
+          self.typingcontents=null;
+
+          clearInterval(self.startTimer)
+        }
       }
     }, 1000);
-  }
+  },
+  computed: {
+    wpm(){
+      if(this.timeelapsed==0){
+        return 0;
+      }
+      return (this.wordstyped * 60)/this.timeelapsed;
+    }
+    
+  },
 };
 </script>
 
@@ -156,7 +183,6 @@ export default {
 }
 .currentfinished {
   color: #39ff14;
-  
 }
 .currenterror {
   color: red;

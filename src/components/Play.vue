@@ -4,8 +4,8 @@
       <h1 v-if="command===1" class="background1">ON YOUR MARKS!</h1>
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
       <h1 v-else-if="command===3" class="background3">GO!</h1>
-      <!-- <h1 v-else></h1> -->
     </div>
+    <button style='border-radius:100%' class="btn btn-primary" > <-</button>
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
         <h6>wpm:{{wpm}}</h6>
@@ -27,6 +27,10 @@
 </template>
 
 <script>
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+import "jquery";
+import "popper.js";
 export default {
   data() {
     return {
@@ -37,6 +41,7 @@ export default {
       currentunfinished: null,
       currentfinished: null,
       currenterror: null,
+      currentfinishedafter:null,
       unfinished: null,
       wpm: 0,
       disableInput: true

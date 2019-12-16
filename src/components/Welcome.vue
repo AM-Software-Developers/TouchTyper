@@ -3,7 +3,7 @@
     <div align="center">
       <div class="centerbox typewriter">
         <h1>AM TouchTyper</h1>
-        <router-link tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
+        <router-link v-shortkey.once="['ctrl', 'alt', 'o']" @shortkey.native="theAction()" tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
       </div>
     </div>
   </div>
@@ -13,7 +13,16 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import "jquery";
 import "popper.js";
-export default {};
+export default {
+  methods: {
+    play(){
+      this.$route.push('/play')
+    },
+    theAction(){
+      this.$router.push('/play');
+    }
+  },
+};
 </script>
 
 <style scoped>

@@ -10,6 +10,7 @@
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
         <h6>wpm:{{wpm}}</h6>
+        <h6>cpm:{{cpm}}</h6>
         <span class="finished">{{finished}}</span>
         <span class="currentfinished">
           <u>{{currentfinished}}</u>
@@ -51,7 +52,8 @@ export default {
       disableInput: true,
       wordstyped: 0,
       timeelapsed: 0,
-      startTimer: 0
+      startTimer: 0,
+      characterstyped:0,
     };
   },
   watch: {
@@ -118,7 +120,6 @@ export default {
           //gameover
           self.timeelapsed=0;
           self.typingcontents=null;
-
           clearInterval(self.startTimer)
         }
       }
@@ -130,6 +131,12 @@ export default {
         return 0;
       }
       return (this.wordstyped * 60)/this.timeelapsed;
+    },
+    cpm(){
+      if(this.timeelapsed==0){
+        return 0;
+      }
+      return (this.characterstyped * 60)/this.timeelapsed;
     }
     
   },

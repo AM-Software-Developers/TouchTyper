@@ -30,10 +30,9 @@ export default {
       tempword: null,
       typingcontents: null,
       finished: "",
-      currentunfinished: null,
+      currentunfinished: "",
       currentfinished: null,
-      currentfinishedafter: null,
-      currenterror: null,
+      currenterror: "",
       currentword: null,
       unfinished: null,
       wpm: 0,
@@ -46,7 +45,7 @@ export default {
       var word = words[0];
       var self = this;
       // console.log(this.tempword);
-      if(this.tempword === "") {
+      if(this.tempword === "" && this.currentunfinished === "" && this.currenterror === "") {
         this.currentunfinished = word+' ';
         this.currentword = word+' ';
         this.unfinished = this.unfinished.replace(word+' ',"");
@@ -65,6 +64,8 @@ export default {
           this.currentfinished += curchars[pos];
         }
         else {
+          if(pos > chars.length - 1)
+            break;
           this.currenterror += chars[pos];
           flag = 1;
         }
@@ -73,7 +74,7 @@ export default {
       while (pos < chars.length) {
         this.currentunfinished += chars[pos++];
       }
-      if(this.currentunfinished === "") {
+      if(this.currentunfinished === "" && this.currenterror === "") {
         this.tempword = "";
         this.finished += this.currentfinished;
         this.currentfinished = "";
@@ -89,7 +90,7 @@ export default {
     }
   },
   created() {
-    this.typingcontents = "something to type. ";
+    this.typingcontents = "This handout will help you understand how are formed, how develop stronger paragraphs, and how to completely and clearly express your ideas. ";
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";

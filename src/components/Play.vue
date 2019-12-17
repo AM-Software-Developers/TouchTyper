@@ -43,10 +43,9 @@ export default {
       tempword: null,
       typingcontents: null,
       finished: "",
-      currentunfinished: null,
+      currentunfinished: "",
       currentfinished: null,
-      currentfinishedafter: null,
-      currenterror: null,
+      currenterror: "",
       currentword: null,
       unfinished: null,
       disableInput: true,
@@ -62,10 +61,10 @@ export default {
       var word = words[0];
       var self = this;
       // console.log(this.tempword);
-      if (this.tempword === "") {
-        this.currentunfinished = word + " ";
-        this.currentword = word + " ";
-        this.unfinished = this.unfinished.replace(word + " ", "");
+      if(this.tempword === "" && this.currentunfinished === "" && this.currenterror === "") {
+        this.currentunfinished = word+' ';
+        this.currentword = word+' ';
+        this.unfinished = this.unfinished.replace(word+' ',"");
         return;
       }
       // console.log(this.currentword);
@@ -79,7 +78,10 @@ export default {
       while (pos < curchars.length) {
         if (curchars[pos] === chars[pos] && flag == 0) {
           this.currentfinished += curchars[pos];
-        } else {
+        }
+        else {
+          if(pos > chars.length - 1)
+            break;
           this.currenterror += chars[pos];
           flag = 1;
         }
@@ -88,7 +90,7 @@ export default {
       while (pos < chars.length) {
         this.currentunfinished += chars[pos++];
       }
-      if (this.currentunfinished === "") {
+      if(this.currentunfinished === "" && this.currenterror === "") {
         this.tempword = "";
         this.finished += this.currentfinished;
         this.wordstyped += 1;
@@ -106,7 +108,7 @@ export default {
     }
   },
   created() {
-    this.typingcontents = "something to type. ";
+    this.typingcontents = "This handout will help you understand how are formed, how develop stronger paragraphs, and how to completely and clearly express your ideas. ";
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
@@ -116,7 +118,7 @@ export default {
         self.disableInput = false;
         self.Focus("tempword");
         self.timeelapsed+=1;
-        if(self.timeelapsed>10){//set min limit
+        if(self.timeelapsed>180){//set min limit
           //gameover
           self.timeelapsed=0;
           self.typingcontents=null;

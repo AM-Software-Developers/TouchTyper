@@ -6,10 +6,16 @@
       <h1 v-else-if="command===3" class="background3">GO!</h1>
     </div>
     <p>{{command}}</p>
-    <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
+      <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
+      <div align="right">
+        <button @click.prevent="refreshPage()" align="right" class="btn btn-primary" style="border-radius:100%">Try again</button>
+        <router-link to="/settings">settings</router-link>
+
+      </div>
+
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
-        <h6>wpm:{{wpm}}</h6>
+        <h6>wpm:{{cpm | cpmToWpm}}</h6>
         <h6>cpm:{{cpm}}</h6>
         <span class="finished">{{finished}}</span>
         <span class="currentfinished">
@@ -52,7 +58,7 @@ export default {
       wordstyped: 0,
       timeelapsed: 0,
       startTimer: 0,
-      characterstyped:0,
+      paragraphs:['hi hello bye.','hello hi bye']
     };
   },
   watch: {
@@ -61,10 +67,14 @@ export default {
       var word = words[0];
       var self = this;
       // console.log(this.tempword);
-      if(this.tempword === "" && this.currentunfinished === "" && this.currenterror === "") {
-        this.currentunfinished = word+' ';
-        this.currentword = word+' ';
-        this.unfinished = this.unfinished.replace(word+' ',"");
+      if (
+        this.tempword === "" &&
+        this.currentunfinished === "" &&
+        this.currenterror === ""
+      ) {
+        this.currentunfinished = word + " ";
+        this.currentword = word + " ";
+        this.unfinished = this.unfinished.replace(word + " ", "");
         return;
       }
       // console.log(this.currentword);
@@ -78,10 +88,8 @@ export default {
       while (pos < curchars.length) {
         if (curchars[pos] === chars[pos] && flag == 0) {
           this.currentfinished += curchars[pos];
-        }
-        else {
-          if(pos > chars.length - 1)
-            break;
+        } else {
+          if (pos > chars.length - 1) break;
           this.currenterror += chars[pos];
           flag = 1;
         }
@@ -90,7 +98,7 @@ export default {
       while (pos < chars.length) {
         this.currentunfinished += chars[pos++];
       }
-      if(this.currentunfinished === "" && this.currenterror === "") {
+      if (this.currentunfinished === "" && this.currenterror === "") {
         this.tempword = "";
         this.finished += this.currentfinished;
         this.wordstyped += 1;
@@ -105,10 +113,13 @@ export default {
   methods: {
     Focus(location) {
       document.getElementById(location).focus();
+    },
+    refreshPage() {
+      location.reload();
     }
   },
   created() {
-    this.typingcontents = "This handout will help you understand how are formed, how develop stronger paragraphs, and how to completely and clearly express your ideas. ";
+    this.typingcontents = this.paragraphs[Math.floor(Math.random() * this.paragraphs.length)];
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
@@ -117,31 +128,43 @@ export default {
       if (self.command >= 3) {
         self.disableInput = false;
         self.Focus("tempword");
-        self.timeelapsed+=1;
-        if(self.timeelapsed>180){//set min limit
+        self.timeelapsed += 1;
+        if (self.timeelapsed > 180) {
+          //set min limit
           //gameover
-          self.timeelapsed=0;
-          self.typingcontents=null;
-          clearInterval(self.startTimer)
+          self.timeelapsed = 0;
+          self.typingcontents = null;
+          clearInterval(self.startTimer);
         }
       }
     }, 1000);
   },
   computed: {
-    wpm(){
-      if(this.timeelapsed==0){
-        return 0;
-      }
-      return (this.wordstyped * 60)/this.timeelapsed;
+    characterstyped() {
+      if (this.finished != null && this.currentfinished != null)
+        return this.finished.length + this.currentfinished.length;
+
+      return 0;
     },
-    cpm(){
-      if(this.timeelapsed==0){
+    // wpm(){
+    //   // if(this.timeelapsed==0){
+    //   //   return 0;
+    //   // }
+    //   // return (this.wordstyped * 60)/this.timeelapsed;
+    //   return this.cpm/5;
+    // },
+    cpm() {
+      if (this.timeelapsed == 0) {
         return 0;
       }
-      return (this.characterstyped * 60)/this.timeelapsed;
+      return Math.round((this.characterstyped * 60) / this.timeelapsed);
     }
-    
   },
+  filters: {
+    cpmToWpm(input) {
+      return input / 5;
+    }
+  }
 };
 </script>
 

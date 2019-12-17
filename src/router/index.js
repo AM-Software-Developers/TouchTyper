@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../components/Welcome'
 import Play from '../components/Play'
+import Settings from '../components/Settings'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,10 @@ const routes = [
     path: '/play',
     name: 'Play',
     component: Play
+  },{
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   },
 ]
 

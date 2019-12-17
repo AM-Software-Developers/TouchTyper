@@ -114,7 +114,7 @@ export default {
         self.disableInput = false;
         self.Focus("tempword");
         self.timeelapsed+=1;
-        if(self.timeelapsed>10){
+        if(self.timeelapsed>10){//set min limit
           //gameover
           self.timeelapsed=0;
           self.typingcontents=null;

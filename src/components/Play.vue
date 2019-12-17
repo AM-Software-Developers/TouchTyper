@@ -4,25 +4,37 @@
       <h1 v-if="command===1" class="background1">ON YOUR MARKS!</h1>
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
       <h1 v-else-if="command===3" class="background3">GO!</h1>
-      <!-- <h1 v-else></h1> -->
     </div>
+    <p>{{command}}</p>
+    <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
     <div align="center">
       <div v-if="typingcontents" class="centerbox">
         <h6>wpm:{{wpm}}</h6>
         <span class="finished">{{finished}}</span>
-        <span class="currentfinished"><u>{{currentfinished}}</u></span>
-        <span class="currenterror"><u>{{currenterror}}</u></span>
-        <span class="currentunfinished"><u>{{currentunfinished}}</u></span>
+        <span class="currentfinished">
+          <u>{{currentfinished}}</u>
+        </span>
+        <span class="currenterror">
+          <u>{{currenterror}}</u>
+        </span>
+        <span class="currentunfinished">
+          <u>{{currentunfinished}}</u>
+        </span>
         <span class="unfinished">{{unfinished}}</span>
         <br />
         <input type="text" id="tempword" v-model="tempword" :disabled="disableInput" />
         <p>{{tempword}}</p>
       </div>
+      <div v-else class="centerbox">BETTER LUCK NEXT TIME</div>
     </div>
   </div>
 </template>
 
 <script>
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+import "jquery";
+import "popper.js";
 export default {
   data() {
     return {
@@ -35,13 +47,15 @@ export default {
       currenterror: "",
       currentword: null,
       unfinished: null,
-      wpm: 0,
-      disableInput: true
+      disableInput: true,
+      wordstyped: 0,
+      timeelapsed: 0,
+      startTimer: 0
     };
   },
   watch: {
     tempword() {
-      var words = this.unfinished.split(' ');
+      var words = this.unfinished.split(" ");
       var word = words[0];
       var self = this;
       // console.log(this.tempword);
@@ -52,15 +66,15 @@ export default {
         return;
       }
       // console.log(this.currentword);
-      var chars = this.currentword.split('');
-      var curchars = this.tempword.split('');
+      var chars = this.currentword.split("");
+      var curchars = this.tempword.split("");
       var pos = 0;
       this.currentfinished = "";
       this.currenterror = "";
       this.currentunfinished = "";
       var flag = 0;
       while (pos < curchars.length) {
-        if(curchars[pos] === chars[pos] &&flag == 0){
+        if (curchars[pos] === chars[pos] && flag == 0) {
           this.currentfinished += curchars[pos];
         }
         else {
@@ -77,10 +91,12 @@ export default {
       if(this.currentunfinished === "" && this.currenterror === "") {
         this.tempword = "";
         this.finished += this.currentfinished;
+        this.wordstyped += 1;
         this.currentfinished = "";
       }
-      if(this.unfinished === "" && this.currentunfinished === "") {
+      if (this.unfinished === "" && this.currentunfinished === "") {
         this.wpm = "You Win!";
+        clearInterval(this.startTimer);
       }
     }
   },
@@ -94,15 +110,31 @@ export default {
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
-    setInterval(function() {
+    this.startTimer = setInterval(function() {
       self.command++;
       if (self.command >= 3) {
         self.disableInput = false;
         self.Focus("tempword");
-        clearInterval();
+        self.timeelapsed+=1;
+        if(self.timeelapsed>180){//set min limit
+          //gameover
+          self.timeelapsed=0;
+          self.typingcontents=null;
+
+          clearInterval(self.startTimer)
+        }
       }
     }, 1000);
-  }
+  },
+  computed: {
+    wpm(){
+      if(this.timeelapsed==0){
+        return 0;
+      }
+      return (this.wordstyped * 60)/this.timeelapsed;
+    }
+    
+  },
 };
 </script>
 
@@ -153,7 +185,6 @@ export default {
 }
 .currentfinished {
   color: #39ff14;
-  
 }
 .currenterror {
   color: red;

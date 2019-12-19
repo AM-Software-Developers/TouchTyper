@@ -1,5 +1,8 @@
 <template>
   <div>
+    <nav class="navbar">
+      <span class="navbar-brand">hello world</span>
+    </nav>
     <div class="inputWrapper">
       <h1 v-if="command===1" class="background1">ON YOUR MARKS!</h1>
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
@@ -14,7 +17,7 @@
       </div>
 
     <div align="center">
-      <div v-if="typingcontents" class="centerbox">
+      <div v-if="typingcontents" class="centerbox container">
         <h6>wpm:{{cpm | cpmToWpm}}</h6>
         <h6>cpm:{{cpm}}</h6>
         <span class="finished">{{finished}}</span>
@@ -40,6 +43,7 @@
 <script>
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap";
 import "jquery";
 import "popper.js";
 export default {
@@ -58,7 +62,8 @@ export default {
       wordstyped: 0,
       timeelapsed: 0,
       startTimer: 0,
-      paragraphs:['hi hello bye.','hello hi bye']
+      paragraphs:['hi hello bye.','hello hi bye.'],
+      maxlimit:null
     };
   },
   watch: {
@@ -123,14 +128,15 @@ export default {
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
+    this.maxlimit = this.typingcontents.length / 3;
     this.startTimer = setInterval(function() {
       self.command++;
       if (self.command >= 3) {
         self.disableInput = false;
         self.Focus("tempword");
         self.timeelapsed += 1;
-        if (self.timeelapsed > 180) {
           //set min limit
+          if (self.timeelapsed > this.maxlimit) {
           //gameover
           self.timeelapsed = 0;
           self.typingcontents = null;
@@ -162,7 +168,7 @@ export default {
   },
   filters: {
     cpmToWpm(input) {
-      return input / 5;
+      return Math.round(input / 5);
     }
   }
 };
@@ -195,7 +201,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
-  border-radius: 100px;
+  border-radius: 25px;
   overflow: auto;
 }
 .background1 {

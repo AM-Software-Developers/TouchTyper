@@ -1,8 +1,11 @@
 <template>
   <div>
-    <nav class="navbar">
-      <span class="navbar-brand">hello world</span>
+      <nav class="navbar">
+
+      <li class="navbar-brand navbar-collapse navbar-nav bg-dark">AM TouchTyper</li>
+
     </nav>
+    
     <div class="inputWrapper">
       <h1 v-if="command===1" class="background1">ON YOUR MARKS!</h1>
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>

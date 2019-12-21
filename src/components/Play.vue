@@ -1,23 +1,33 @@
 <template>
   <div>
-      <nav class="navbar">
-
-      <li class="navbar-brand navbar-collapse navbar-nav bg-dark">AM TouchTyper</li>
-
+    <nav :class="{'navbar':isActive, 'navbar-light':command<=3, 'navbar-dark':command>3}">
+      <li
+        v-if="command===1"
+        class="navbar-brand navbar-collapse navbar-nav bg-danger"
+      >ON YOUR MARKS!</li>
+      <li
+        v-else-if="command===2"
+        class="navbar-brand navbar-collapse navbar-nav bg-warning"
+      >GET SET!</li>
+      <li v-else-if="command===3" class="navbar-brand navbar-collapse navbar-nav bg-success">GO!</li>
+      <li v-else class="navbar-brand navbar-collapse navbar-nav bg-dark">AM TouchTyper</li>
     </nav>
-    
-    <div class="inputWrapper">
+
+    <!-- <div class="inputWrapper">
       <h1 v-if="command===1" class="background1">ON YOUR MARKS!</h1>
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
       <h1 v-else-if="command===3" class="background3">GO!</h1>
+    </div>-->
+    <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
+    <div align="right">
+      <button
+        @click.prevent="refreshPage()"
+        align="right"
+        class="btn btn-primary"
+        style="border-radius:100%"
+      >Try again</button>
+      <router-link to="/settings">settings</router-link>
     </div>
-    <p>{{command}}</p>
-      <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
-      <div align="right">
-        <button @click.prevent="refreshPage()" align="right" class="btn btn-primary" style="border-radius:100%">Try again</button>
-        <router-link to="/settings">settings</router-link>
-
-      </div>
 
     <div align="center">
       <div v-if="typingcontents" class="centerbox container">
@@ -52,6 +62,7 @@ import "popper.js";
 export default {
   data() {
     return {
+      isActive: true,
       command: 1,
       tempword: null,
       typingcontents: null,
@@ -65,8 +76,8 @@ export default {
       wordstyped: 0,
       timeelapsed: 0,
       startTimer: 0,
-      paragraphs:['hi hello bye.','hello hi bye.'],
-      maxlimit:null
+      paragraphs: ["hi hello bye.", "hello hi bye."],
+      maxlimit: null
     };
   },
   watch: {
@@ -127,7 +138,8 @@ export default {
     }
   },
   created() {
-    this.typingcontents = this.paragraphs[Math.floor(Math.random() * this.paragraphs.length)];
+    this.typingcontents =
+      this.paragraphs[Math.floor(Math.random() * this.paragraphs.length)] + " ";
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
@@ -138,8 +150,8 @@ export default {
         self.disableInput = false;
         self.Focus("tempword");
         self.timeelapsed += 1;
-          //set min limit
-          if (self.timeelapsed > this.maxlimit) {
+        //set min limit
+        if (self.timeelapsed > this.maxlimit) {
           //gameover
           self.timeelapsed = 0;
           self.typingcontents = null;
@@ -155,13 +167,6 @@ export default {
 
       return 0;
     },
-    // wpm(){
-    //   // if(this.timeelapsed==0){
-    //   //   return 0;
-    //   // }
-    //   // return (this.wordstyped * 60)/this.timeelapsed;
-    //   return this.cpm/5;
-    // },
     cpm() {
       if (this.timeelapsed == 0) {
         return 0;

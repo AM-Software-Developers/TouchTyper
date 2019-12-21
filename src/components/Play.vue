@@ -18,12 +18,12 @@
       <h1 v-else-if="command===2" class="background2">GET SET!</h1>
       <h1 v-else-if="command===3" class="background3">GO!</h1>
     </div>-->
-    <router-link style="border-radius:100%" class="btn btn-primary" to="/"><-</router-link>
+    <router-link style="border-radius:100%" class="btn btn-danger" to="/"><-</router-link>
     <div align="right">
       <button
         @click.prevent="refreshPage()"
         align="right"
-        class="btn btn-primary"
+        class="btn btn-danger"
         style="border-radius:100%"
       >Try again</button>
       <router-link to="/settings">settings</router-link>
@@ -33,7 +33,8 @@
       <div v-if="typingcontents" class="centerbox container">
         <h6>wpm:{{cpm | cpmToWpm}}</h6>
         <h6>cpm:{{cpm}}</h6>
-        <span class="finished">{{finished}}</span>
+        <h6>time remaining:{{maxlimit - timeelapsed}}s</h6>
+        <span class="text-contents"><span class="finished">{{finished}}</span>
         <span class="currentfinished">
           <u>{{currentfinished}}</u>
         </span>
@@ -43,12 +44,12 @@
         <span class="currentunfinished">
           <u>{{currentunfinished}}</u>
         </span>
-        <span class="unfinished">{{unfinished}}</span>
+        <span class="unfinished">{{unfinished}}</span></span>
+        
         <br />
-        <span style="form-inline">
-        <p class="form-group">></p>
+        <span class="form-inline">
+        <p class="form-group" v-if="command>3">></p>
         <input type="text" id="tempword" class="form-control form-group" v-model="tempword" :disabled="disableInput" /></span>
-        <p>{{tempword}}</p>
       </div>
       <div v-else class="centerbox">BETTER LUCK NEXT TIME</div>
     </div>
@@ -143,15 +144,15 @@ export default {
     this.unfinished = this.typingcontents;
     var self = this;
     this.tempword = "";
-    this.maxlimit = this.typingcontents.length / 3;
+    this.maxlimit = this.typingcontents.length / 2;
     this.startTimer = setInterval(function() {
       self.command++;
-      if (self.command >= 3) {
+      if (self.command > 3) {
         self.disableInput = false;
         self.Focus("tempword");
         self.timeelapsed += 1;
         //set min limit
-        if (self.timeelapsed > this.maxlimit) {
+        if (self.timeelapsed > self.maxlimit) {
           //gameover
           self.timeelapsed = 0;
           self.typingcontents = null;
@@ -233,5 +234,11 @@ export default {
 .currenterror {
   color: red;
   background-color: pink;
+}
+.text-contents{
+  border-style: solid;
+  border-color: #dc3545;
+  border-width: 2px;
+  border-radius: 25px;
 }
 </style>

@@ -3,7 +3,7 @@
     <div align="center">
       <div class="centerbox typewriter">
         <h1>AM TouchTyper</h1>
-        <router-link v-shortkey="['ctrl', 'alt', 'o']" @shortkey.native="theAction()" tag="button" to="/play" class="btn btn-primary btn-danger">Start Typing</router-link>
+        <router-link v-shortkey="['ctrl', 'alt', 'o']" @shortkey.native="theAction()" tag="button" to="/play" class="btn btn-primary btn-danger btn-lg">Start Typing</router-link>
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
 <style scoped>
 .centerbox {
   border-radius: 25px;
-  background-color: black;
+  background-color: #424242;
   color:aliceblue;
   margin: 0;
   top: 50%;

@@ -45,7 +45,9 @@
         </span>
         <span class="unfinished">{{unfinished}}</span>
         <br />
-        <input type="text" id="tempword" v-model="tempword" :disabled="disableInput" />
+        <span style="form-inline">
+        <p class="form-group">></p>
+        <input type="text" id="tempword" class="form-control form-group" v-model="tempword" :disabled="disableInput" /></span>
         <p>{{tempword}}</p>
       </div>
       <div v-else class="centerbox">BETTER LUCK NEXT TIME</div>
@@ -85,7 +87,6 @@ export default {
       var words = this.unfinished.split(" ");
       var word = words[0];
       var self = this;
-      // console.log(this.tempword);
       if (
         this.tempword === "" &&
         this.currentunfinished === "" &&
@@ -96,7 +97,6 @@ export default {
         this.unfinished = this.unfinished.replace(word + " ", "");
         return;
       }
-      // console.log(this.currentword);
       var chars = this.currentword.split("");
       var curchars = this.tempword.split("");
       var pos = 0;
@@ -203,7 +203,7 @@ export default {
   display: inline-block;
   width: 50%;
   height: 40%;
-  background-color: #000;
+  background-color: #424242;
   margin: 0;
   top: 50%;
   left: 50%;

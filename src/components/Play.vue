@@ -28,28 +28,40 @@
       >Try again</button>
       <router-link to="/settings">settings</router-link>
     </div>
-
     <div align="center">
       <div v-if="typingcontents" class="centerbox container">
-        <h6>wpm:{{cpm | cpmToWpm}}</h6>
-        <h6>cpm:{{cpm}}</h6>
-        <h6>time remaining:{{maxlimit - timeelapsed}}s</h6>
-        <span class="text-contents"><span class="finished">{{finished}}</span>
-        <span class="currentfinished">
-          <u>{{currentfinished}}</u>
+        <br>
+        <pre class="d-flex justify-content-center" style="color:black">
+          <h6>wpm:<b style="color:#dc3545">{{cpm | cpmToWpm}}</b>  |  </h6>
+          <h6>cpm:<b style="color:#dc3545">{{cpm}}</b>  |  </h6>
+          <h6>time remaining: <b style="color:#dc3545">{{maxlimit - timeelapsed}}</b>s</h6>
+        </pre>
+        <hr class="redhorizontalline" />
+        <span class="text-contents">
+          <span class="finished">{{finished}}</span>
+          <span class="currentfinished">
+            <u>{{currentfinished}}</u>
+          </span>
+          <span class="currenterror">
+            <u>{{currenterror}}</u>
+          </span>
+          <span class="currentunfinished">
+            <u>{{currentunfinished}}</u>
+          </span>
+          <span class="unfinished">{{unfinished}}</span>
         </span>
-        <span class="currenterror">
-          <u>{{currenterror}}</u>
-        </span>
-        <span class="currentunfinished">
-          <u>{{currentunfinished}}</u>
-        </span>
-        <span class="unfinished">{{unfinished}}</span></span>
-        
+
         <br />
         <span class="form-inline">
-        <p class="form-group" v-if="command>3">></p>
-        <input type="text" id="tempword" class="form-control form-group" v-model="tempword" :disabled="disableInput" /></span>
+          <p class="form-group" v-if="command>3">></p>
+          <input
+            type="text"
+            id="tempword"
+            class="form-control form-group"
+            v-model="tempword"
+            :disabled="disableInput"
+          />
+        </span>
       </div>
       <div v-else class="centerbox">BETTER LUCK NEXT TIME</div>
     </div>
@@ -235,10 +247,15 @@ export default {
   color: red;
   background-color: pink;
 }
-.text-contents{
+.text-contents {
   border-style: solid;
   border-color: #dc3545;
   border-width: 2px;
   border-radius: 25px;
+}
+.redhorizontalline {
+  height: 0.1%;
+  color: #dc3545;
+  background-color: #39ff14;
 }
 </style>
